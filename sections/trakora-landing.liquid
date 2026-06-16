@@ -80,8 +80,10 @@
   .tk-review { flex: 1 1 240px; max-width: 300px; background: rgba(255,255,255,.08); border-radius: 18px; padding: 22px; transition: transform .25s ease, opacity .7s ease; }
   .tk-review:hover { transform: translateY(-4px); }
   .tk-review .stars { color: var(--tk-orange); margin-bottom: 8px; }
-  .tk-review p { margin: 0 0 10px; font-size: 14px; opacity: .95; }
+  .tk-review p { margin: 0; font-size: 14px; opacity: .9; }
   .tk-review .who { font-size: 13px; opacity: .7; }
+  .tk-review .tk-tic { font-size: 30px; margin-bottom: 10px; }
+  .tk-review h3 { margin: 0 0 6px; font-size: 17px; font-weight: 700; color: #fff; }
 
   .tk-guarantee { display: inline-flex; flex-wrap: wrap; gap: 24px; justify-content: center; font-size: 15px; color: #334155; margin-top: 36px; }
 
@@ -193,15 +195,11 @@
   <!-- TRUST -->
   <div class="tk-container">
     <section class="tk-trust tk-reveal">
-      <div class="tk-stats">
-        <div><div class="n">{{ 'trakora.stat1_n' | t }}</div><div class="l">{{ 'trakora.stat1_l' | t }}</div></div>
-        <div><div class="n">{{ 'trakora.stat2_n' | t }}</div><div class="l">{{ 'trakora.stat2_l' | t }}</div></div>
-        <div><div class="n">{{ 'trakora.stat3_n' | t }}</div><div class="l">{{ 'trakora.stat3_l' | t }}</div></div>
-      </div>
+      <h2 style="font-size:clamp(22px,4vw,28px);font-weight:800;margin:0 0 30px;color:#fff;">{{ 'trakora.trust_title' | t }}</h2>
       <div class="tk-reviews">
-        <div class="tk-review tk-reveal"><div class="stars">★★★★★</div><p>{{ 'trakora.review1' | t }}</p><div class="who">{{ 'trakora.review1_who' | t }}</div></div>
-        <div class="tk-review tk-reveal"><div class="stars">★★★★★</div><p>{{ 'trakora.review2' | t }}</p><div class="who">{{ 'trakora.review2_who' | t }}</div></div>
-        <div class="tk-review tk-reveal"><div class="stars">★★★★★</div><p>{{ 'trakora.review3' | t }}</p><div class="who">{{ 'trakora.review3_who' | t }}</div></div>
+        <div class="tk-review tk-reveal"><div class="tk-tic">📡</div><h3>{{ 'trakora.trust1_t' | t }}</h3><p>{{ 'trakora.trust1_d' | t }}</p></div>
+        <div class="tk-review tk-reveal"><div class="tk-tic">🔋</div><h3>{{ 'trakora.trust2_t' | t }}</h3><p>{{ 'trakora.trust2_d' | t }}</p></div>
+        <div class="tk-review tk-reveal"><div class="tk-tic">🛡️</div><h3>{{ 'trakora.trust3_t' | t }}</h3><p>{{ 'trakora.trust3_d' | t }}</p></div>
       </div>
     </section>
   </div>

@@ -528,7 +528,7 @@
     }
   },
   "trakora": {
-    "hero_badge": "⭐️ 4.8/5 from 10,000+ pet owners",
+    "hero_badge": "📍 Real-time tracking for dogs &amp; cats",
     "hero_title": "Never lose your pet<br>again.",
     "hero_sub": "Real-time GPS tracking for more safety – for dogs &amp; cats, worldwide, right on your phone.",
     "hero_cta": "Protect now →",
@@ -543,22 +543,10 @@
     "feat1_d": "Live location accurate to a few meters – anytime on your phone.",
     "feat2_t": "Long battery life",
     "feat2_d": "Up to 7 days per charge – no daily charging needed.",
-    "feat3_t": "100% Waterproof",
+    "feat3_t": "Waterproof",
     "feat3_d": "Rain, puddle, stream – the tracker joins every adventure.",
     "feat4_t": "App control",
     "feat4_d": "Safe zones, history &amp; alerts – easily in the free app.",
-    "stat1_n": "10,000+",
-    "stat1_l": "happy pet owners",
-    "stat2_n": "4.8★",
-    "stat2_l": "average rating",
-    "stat3_n": "99.9%",
-    "stat3_l": "reliable tracking",
-    "review1": "“My cat was gone overnight – with TRAKORA I found him in 10 minutes. Priceless.”",
-    "review1_who": "— Sandra K., verified purchase",
-    "review2": "“Finally I can let my dog run free in the woods without worry. The app is dead simple.”",
-    "review2_who": "— Markus T., verified purchase",
-    "review3": "“Battery lasts forever, super accurate and waterproof. Exactly what we were looking for.”",
-    "review3_who": "— Lena B., verified purchase",
     "guarantee1": "🛡️ <strong>30-day</strong> money-back guarantee",
     "guarantee2": "↩️ <strong>Easy</strong> returns",
     "guarantee3": "🚚 <strong>Free</strong> shipping",
@@ -576,6 +564,13 @@
     "final_title": "Protect your pet today.",
     "final_text": "Give uncertainty no chance. With TRAKORA you always know where your companion is.",
     "final_cta": "Add to cart",
-    "final_cta_fallback": "Get yours now"
+    "final_cta_fallback": "Get yours now",
+    "trust_title": "Why pet owners choose TRAKORA",
+    "trust1_t": "GPS &amp; cellular",
+    "trust1_d": "Worldwide tracking – anywhere with coverage.",
+    "trust2_t": "Up to 7 days battery",
+    "trust2_d": "Long runtime without daily charging.",
+    "trust3_t": "30-day returns",
+    "trust3_d": "No risk – full refund."
   }
 }
