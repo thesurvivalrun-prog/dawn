@@ -1,5 +1,6 @@
 {%- liquid
   assign product = section.settings.product
+  assign variant = product.selected_or_first_available_variant
 -%}
 
 {% style %}
@@ -21,18 +22,29 @@
   .tk-container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
   .tk-narrow { max-width: 720px; margin: 0 auto; }
 
-  /* Reveal on scroll */
-  .tk-reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  /* Reveal on scroll (with stagger) */
+  .tk-reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
   .tk-reveal.tk-in { opacity: 1; transform: none; }
+  .tk-feat.tk-reveal:nth-child(2), .tk-review.tk-reveal:nth-child(2) { transition-delay: .08s; }
+  .tk-feat.tk-reveal:nth-child(3), .tk-review.tk-reveal:nth-child(3) { transition-delay: .16s; }
+  .tk-feat.tk-reveal:nth-child(4) { transition-delay: .24s; }
 
   /* HERO */
-  .tk-hero { text-align: center; background: linear-gradient(160deg,#1E3A8A 0%,#1e40af 58%,#2563eb 100%); border-radius: 28px; padding: 72px 28px; color: #fff; margin-top: 22px; }
-  .tk-badge { display: inline-block; background: rgba(255,255,255,.15); padding: 8px 18px; border-radius: 999px; font-size: 13px; letter-spacing: .4px; margin-bottom: 22px; }
-  .tk-hero h1 { font-size: clamp(32px, 6vw, 50px); line-height: 1.1; margin: 0 0 16px; font-weight: 800; letter-spacing: -.5px; }
+  .tk-hero { position: relative; text-align: center; border-radius: 28px; padding: 76px 28px; color: #fff; margin-top: 22px; overflow: hidden;
+    background: linear-gradient(160deg, #1E3A8A, #1e40af, #2563eb, #1E3A8A); background-size: 220% 220%; animation: tkGradient 16s ease infinite; }
+  @keyframes tkGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  .tk-hero::after { content: ""; position: absolute; width: 420px; height: 420px; top: -160px; right: -120px; border-radius: 50%; background: radial-gradient(circle, rgba(34,197,94,.35), transparent 70%); animation: tkBlob 12s ease-in-out infinite; }
+  @keyframes tkBlob { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-30px,40px) scale(1.2); } }
+  .tk-hero > * { position: relative; z-index: 1; }
+  .tk-badge { display: inline-block; background: rgba(255,255,255,.15); padding: 8px 18px; border-radius: 999px; font-size: 13px; letter-spacing: .4px; margin-bottom: 22px; animation: tkFloat 3.6s ease-in-out infinite; }
+  @keyframes tkFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .tk-hero h1 { font-size: clamp(32px, 6vw, 52px); line-height: 1.08; margin: 0 0 16px; font-weight: 800; letter-spacing: -.5px; }
   .tk-hero p { font-size: clamp(16px,2.4vw,20px); opacity: .92; max-width: 580px; margin: 0 auto 30px; }
 
   .tk-cta { display: inline-block; background: var(--tk-orange); color: #1f2937; font-weight: 700; font-size: 17px; padding: 16px 40px; border: none; border-radius: 14px; text-decoration: none; cursor: pointer; box-shadow: 0 10px 26px rgba(245,158,11,.4); transition: transform .2s ease, box-shadow .2s ease; }
-  .tk-cta:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 34px rgba(245,158,11,.5); }
+  .tk-cta:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 34px rgba(245,158,11,.55); }
+  .tk-cta--pulse { animation: tkGlow 2.6s ease-in-out infinite; }
+  @keyframes tkGlow { 0%,100% { box-shadow: 0 10px 26px rgba(245,158,11,.4); } 50% { box-shadow: 0 12px 38px rgba(245,158,11,.75); } }
   .tk-cta-note { margin-top: 18px; font-size: 13px; opacity: .85; }
 
   .tk-section { padding: 64px 0 8px; text-align: center; }
@@ -47,14 +59,15 @@
   .tk-dot, .tk-pulse { position: absolute; width: 20px; height: 20px; border-radius: 50%; animation: tkMove 9s ease-in-out infinite; }
   .tk-dot { background: var(--tk-blue); border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,.3); z-index: 2; }
   .tk-pulse { background: var(--tk-green); animation: tkMove 9s ease-in-out infinite, tkPulse 2.2s ease-out infinite; }
-  @keyframes tkPulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,.5); } 70% { box-shadow: 0 0 0 26px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+  @keyframes tkPulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,.5); } 70% { box-shadow: 0 0 0 28px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
   @keyframes tkMove { 0% { left: 12%; top: 64%; } 25% { left: 40%; top: 28%; } 50% { left: 66%; top: 50%; } 75% { left: 82%; top: 22%; } 100% { left: 12%; top: 64%; } }
 
   /* FEATURES */
   .tk-feats { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 30px; }
-  .tk-feat { flex: 1 1 240px; max-width: 250px; background: #fff; border: 1px solid var(--tk-line); border-radius: 20px; padding: 26px; text-align: left; transition: transform .25s ease, box-shadow .25s ease; }
-  .tk-feat:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(30,58,138,.14); }
-  .tk-feat .ic { font-size: 30px; margin-bottom: 12px; }
+  .tk-feat { flex: 1 1 240px; max-width: 250px; background: #fff; border: 1px solid var(--tk-line); border-radius: 20px; padding: 26px; text-align: left; transition: transform .25s ease, box-shadow .25s ease, opacity .7s ease; }
+  .tk-feat:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(30,58,138,.16); }
+  .tk-feat .ic { font-size: 30px; margin-bottom: 12px; display: inline-block; transition: transform .25s ease; }
+  .tk-feat:hover .ic { transform: scale(1.18) rotate(-6deg); }
   .tk-feat h3 { margin: 0 0 6px; font-size: 17px; font-weight: 700; color: var(--tk-blue); }
   .tk-feat p { margin: 0; font-size: 14px; color: var(--tk-muted); }
 
@@ -64,7 +77,8 @@
   .tk-stats .n { font-size: 34px; font-weight: 800; }
   .tk-stats .l { font-size: 13px; opacity: .85; }
   .tk-reviews { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; text-align: left; }
-  .tk-review { flex: 1 1 240px; max-width: 300px; background: rgba(255,255,255,.08); border-radius: 18px; padding: 22px; }
+  .tk-review { flex: 1 1 240px; max-width: 300px; background: rgba(255,255,255,.08); border-radius: 18px; padding: 22px; transition: transform .25s ease, opacity .7s ease; }
+  .tk-review:hover { transform: translateY(-4px); }
   .tk-review .stars { color: var(--tk-orange); margin-bottom: 8px; }
   .tk-review p { margin: 0 0 10px; font-size: 14px; opacity: .95; }
   .tk-review .who { font-size: 13px; opacity: .7; }
@@ -73,10 +87,11 @@
 
   /* FAQ */
   .tk-faq { margin: 30px auto 0; }
-  .tk-faq details { background: var(--tk-bg); border: 1px solid var(--tk-line); border-radius: 16px; padding: 2px 22px; margin-bottom: 12px; text-align: left; }
+  .tk-faq details { background: var(--tk-bg); border: 1px solid var(--tk-line); border-radius: 16px; padding: 2px 22px; margin-bottom: 12px; text-align: left; transition: border-color .2s ease; }
+  .tk-faq details[open] { border-color: var(--tk-green); }
   .tk-faq summary { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; font-weight: 700; font-size: 16px; cursor: pointer; list-style: none; }
   .tk-faq summary::-webkit-details-marker { display: none; }
-  .tk-faq .arrow { color: var(--tk-green); font-size: 20px; transition: transform .2s ease; }
+  .tk-faq .arrow { color: var(--tk-green); font-size: 20px; transition: transform .25s ease; }
   .tk-faq details[open] .arrow { transform: rotate(45deg); }
   .tk-faq p { margin: 0 0 18px; color: var(--tk-muted); font-size: 15px; }
 
@@ -84,46 +99,66 @@
   .tk-final { text-align: center; background: linear-gradient(160deg,#16a34a 0%,#22C55E 100%); border-radius: 28px; padding: 60px 28px; color: #fff; margin: 64px 0 24px; }
   .tk-final h2 { font-size: clamp(26px,5vw,34px); font-weight: 800; letter-spacing: -.4px; margin: 0 0 14px; }
   .tk-final p { font-size: 17px; opacity: .95; max-width: 540px; margin: 0 auto 28px; }
-
   .tk-price { display: inline-flex; align-items: baseline; gap: 12px; margin: 6px 0 22px; }
   .tk-price .now { font-size: 30px; font-weight: 800; }
   .tk-price .old { font-size: 18px; opacity: .7; text-decoration: line-through; }
 
-  @media (max-width: 600px) {
-    .tk-hero { padding: 54px 20px; border-radius: 22px; }
-    .tk-guarantee { gap: 14px; }
+  /* STICKY MOBILE BUY BAR */
+  .tk-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: none; align-items: center; justify-content: space-between; gap: 12px; background: #fff; border-top: 1px solid var(--tk-line); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); box-shadow: 0 -6px 20px rgba(0,0,0,.1); }
+  .tk-sticky .info { line-height: 1.2; }
+  .tk-sticky .info .p { font-weight: 800; color: var(--tk-blue); font-size: 17px; }
+  .tk-sticky .info .o { font-size: 12px; color: #94a3b8; text-decoration: line-through; margin-left: 6px; }
+  .tk-sticky button { flex: 1; max-width: 220px; font-size: 15px; padding: 13px 18px; }
+
+  @media (max-width: 749px) {
+    .tk-hero { padding: 56px 20px; border-radius: 22px; }
+    .tk-section { padding: 48px 0 6px; }
+    .tk-map-card, .tk-trust { border-radius: 22px; padding: 32px 20px; }
+    .tk-map { height: 210px; }
+    .tk-stats { gap: 22px; }
+    .tk-stats .n { font-size: 28px; }
+    .tk-feat { max-width: 100%; }
+    .tk-review { max-width: 100%; }
+    .tk-guarantee { gap: 12px; font-size: 14px; }
+    .tk-final { padding: 48px 20px; }
+    .tk-sticky { display: flex; }
+    .tk-wrap { padding-bottom: 74px; } /* room for sticky bar */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tk-hero, .tk-hero::after, .tk-badge, .tk-cta--pulse, .tk-dot, .tk-pulse { animation: none !important; }
+    .tk-reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
   }
 {% endstyle %}
 
 <div class="tk-wrap">
 
-  {%- comment -%} The whole landing is wrapped in a cart form so every CTA adds to cart {%- endcomment -%}
-  {%- assign variant = product.selected_or_first_available_variant -%}
+  {%- comment -%} Whole landing wrapped in a cart form so every CTA adds to cart {%- endcomment -%}
   <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data" id="tk-buy-form" class="tk-form">
     <input type="hidden" name="form_type" value="product">
     <input type="hidden" name="utf8" value="✓">
-    <input type="hidden" name="id" value="{{ variant.id }}">
+    {%- if variant -%}<input type="hidden" name="id" value="{{ variant.id }}">{%- endif -%}
 
   <div class="tk-container">
 
     <!-- HERO -->
     <section class="tk-hero tk-reveal">
-      <span class="tk-badge">⭐️ 4,8/5 von über 10.000 Tierbesitzern</span>
-      <h1>Verliere dein Haustier<br>nie wieder.</h1>
-      <p>Echtzeit-GPS-Tracking für absolute Sicherheit – für Hund &amp; Katze, weltweit, direkt auf deinem Handy.</p>
-      {%- if product != blank -%}
-        <button type="submit" class="tk-cta">Jetzt schützen →</button>
+      <span class="tk-badge">{{ 'trakora.hero_badge' | t }}</span>
+      <h1>{{ 'trakora.hero_title' | t }}</h1>
+      <p>{{ 'trakora.hero_sub' | t }}</p>
+      {%- if variant -%}
+        <button type="submit" class="tk-cta tk-cta--pulse">{{ 'trakora.hero_cta' | t }}</button>
       {%- else -%}
-        <a href="#tk-buy" class="tk-cta">Jetzt schützen →</a>
+        <a href="#tk-buy" class="tk-cta tk-cta--pulse">{{ 'trakora.hero_cta' | t }}</a>
       {%- endif -%}
-      <div class="tk-cta-note">🔒 30 Tage Geld-zurück-Garantie · 🚚 Kostenloser Versand</div>
+      <div class="tk-cta-note">{{ 'trakora.guarantee_note' | t }}</div>
     </section>
 
     <!-- PROBLEM -->
     <section class="tk-section tk-reveal">
       <div class="tk-narrow">
-        <h2>Ein offenes Tor. Eine Sekunde. Und er ist weg.</h2>
-        <p class="tk-lead">Jeden Tag verschwinden tausende Haustiere – ein aufgeschrecktes Tier rennt schneller, als du reagieren kannst. Die Stunden der Ungewissheit sind das Schlimmste. Genau dafür gibt es TRAKORA: damit du immer weißt, wo dein Liebling ist.</p>
+        <h2>{{ 'trakora.problem_title' | t }}</h2>
+        <p class="tk-lead">{{ 'trakora.problem_text' | t }}</p>
       </div>
     </section>
   </div>
@@ -131,26 +166,26 @@
   <!-- SOLUTION / LIVE MAP -->
   <div class="tk-container">
     <section class="tk-map-card tk-reveal">
-      <div class="tk-eyebrow">● Live-Ortung</div>
-      <h2 style="font-size:clamp(22px,4vw,28px);font-weight:800;margin:0 0 24px;">Du öffnest die App – und siehst ihn sofort.</h2>
+      <div class="tk-eyebrow">{{ 'trakora.map_eyebrow' | t }}</div>
+      <h2 style="font-size:clamp(22px,4vw,28px);font-weight:800;margin:0 0 24px;">{{ 'trakora.map_title' | t }}</h2>
       <div class="tk-map">
         <div class="tk-grid"></div>
         <div class="tk-pulse"></div>
         <div class="tk-dot"></div>
       </div>
-      <p class="tk-lead" style="margin-top:24px;">Der Standortpunkt bewegt sich in Echtzeit mit deinem Tier. Setze einen sicheren Bereich – verlässt dein Liebling ihn, bekommst du sofort eine Benachrichtigung.</p>
+      <p class="tk-lead" style="margin-top:24px;">{{ 'trakora.map_text' | t }}</p>
     </section>
   </div>
 
   <!-- FEATURES -->
   <div class="tk-container">
-    <section class="tk-section tk-reveal">
-      <h2>Alles, was echte Sicherheit braucht.</h2>
+    <section class="tk-section">
+      <h2 class="tk-reveal">{{ 'trakora.features_title' | t }}</h2>
       <div class="tk-feats">
-        <div class="tk-feat"><div class="ic">📍</div><h3>Echtzeit-GPS</h3><p>Live-Standort auf wenige Meter genau – jederzeit auf deinem Handy.</p></div>
-        <div class="tk-feat"><div class="ic">🔋</div><h3>Lange Akkulaufzeit</h3><p>Bis zu 7 Tage pro Ladung – kein tägliches Aufladen nötig.</p></div>
-        <div class="tk-feat"><div class="ic">💧</div><h3>100% Wasserfest</h3><p>Regen, Pfütze, Bach – der Tracker macht jedes Abenteuer mit.</p></div>
-        <div class="tk-feat"><div class="ic">📱</div><h3>App-Steuerung</h3><p>Sicherheitszonen, Verlauf &amp; Alarme – einfach in der kostenlosen App.</p></div>
+        <div class="tk-feat tk-reveal"><div class="ic">📍</div><h3>{{ 'trakora.feat1_t' | t }}</h3><p>{{ 'trakora.feat1_d' | t }}</p></div>
+        <div class="tk-feat tk-reveal"><div class="ic">🔋</div><h3>{{ 'trakora.feat2_t' | t }}</h3><p>{{ 'trakora.feat2_d' | t }}</p></div>
+        <div class="tk-feat tk-reveal"><div class="ic">💧</div><h3>{{ 'trakora.feat3_t' | t }}</h3><p>{{ 'trakora.feat3_d' | t }}</p></div>
+        <div class="tk-feat tk-reveal"><div class="ic">📱</div><h3>{{ 'trakora.feat4_t' | t }}</h3><p>{{ 'trakora.feat4_d' | t }}</p></div>
       </div>
     </section>
   </div>
@@ -159,14 +194,14 @@
   <div class="tk-container">
     <section class="tk-trust tk-reveal">
       <div class="tk-stats">
-        <div><div class="n">10.000+</div><div class="l">glückliche Tierbesitzer</div></div>
-        <div><div class="n">4,8★</div><div class="l">durchschnittliche Bewertung</div></div>
-        <div><div class="n">99,9%</div><div class="l">zuverlässige Ortung</div></div>
+        <div><div class="n">{{ 'trakora.stat1_n' | t }}</div><div class="l">{{ 'trakora.stat1_l' | t }}</div></div>
+        <div><div class="n">{{ 'trakora.stat2_n' | t }}</div><div class="l">{{ 'trakora.stat2_l' | t }}</div></div>
+        <div><div class="n">{{ 'trakora.stat3_n' | t }}</div><div class="l">{{ 'trakora.stat3_l' | t }}</div></div>
       </div>
       <div class="tk-reviews">
-        <div class="tk-review"><div class="stars">★★★★★</div><p>„Mein Kater war über Nacht weg – mit TRAKORA hatte ich ihn in 10 Minuten gefunden. Unbezahlbar."</p><div class="who">— Sandra K., verifizierter Kauf</div></div>
-        <div class="tk-review"><div class="stars">★★★★★</div><p>„Endlich kann ich meinen Hund im Wald frei laufen lassen, ohne Angst. Die App ist kinderleicht."</p><div class="who">— Markus T., verifizierter Kauf</div></div>
-        <div class="tk-review"><div class="stars">★★★★★</div><p>„Akku hält ewig, super genau und wasserfest. Genau das, was wir gesucht haben."</p><div class="who">— Lena B., verifizierter Kauf</div></div>
+        <div class="tk-review tk-reveal"><div class="stars">★★★★★</div><p>{{ 'trakora.review1' | t }}</p><div class="who">{{ 'trakora.review1_who' | t }}</div></div>
+        <div class="tk-review tk-reveal"><div class="stars">★★★★★</div><p>{{ 'trakora.review2' | t }}</p><div class="who">{{ 'trakora.review2_who' | t }}</div></div>
+        <div class="tk-review tk-reveal"><div class="stars">★★★★★</div><p>{{ 'trakora.review3' | t }}</p><div class="who">{{ 'trakora.review3_who' | t }}</div></div>
       </div>
     </section>
   </div>
@@ -174,36 +209,36 @@
   <!-- GUARANTEE -->
   <div class="tk-container" style="text-align:center;">
     <div class="tk-guarantee tk-reveal">
-      <span>🛡️ <strong>30 Tage</strong> Geld-zurück-Garantie</span>
-      <span>↩️ <strong>Einfache</strong> Rückgabe</span>
-      <span>🚚 <strong>Kostenloser</strong> Versand</span>
+      <span>{{ 'trakora.guarantee1' | t }}</span>
+      <span>{{ 'trakora.guarantee2' | t }}</span>
+      <span>{{ 'trakora.guarantee3' | t }}</span>
     </div>
   </div>
 
   <!-- FAQ -->
   <div class="tk-container">
-    <section class="tk-section tk-reveal">
-      <h2>Häufige Fragen</h2>
-      <div class="tk-faq tk-narrow">
+    <section class="tk-section">
+      <h2 class="tk-reveal">{{ 'trakora.faq_title' | t }}</h2>
+      <div class="tk-faq tk-narrow tk-reveal">
         <details open>
-          <summary>Wie groß ist die Reichweite?<span class="arrow">+</span></summary>
-          <p>Unbegrenzt. Der Tracker nutzt GPS &amp; Mobilfunk – du ortest dein Tier überall mit Netzabdeckung, egal ob 100 Meter oder 100 Kilometer entfernt.</p>
+          <summary>{{ 'trakora.faq1_q' | t }}<span class="arrow">+</span></summary>
+          <p>{{ 'trakora.faq1_a' | t }}</p>
         </details>
         <details>
-          <summary>Wie lange hält der Akku?<span class="arrow">+</span></summary>
-          <p>Je nach Nutzung bis zu 7 Tage pro Ladung. Die App zeigt dir den Akkustand jederzeit an und warnt dich rechtzeitig.</p>
+          <summary>{{ 'trakora.faq2_q' | t }}<span class="arrow">+</span></summary>
+          <p>{{ 'trakora.faq2_a' | t }}</p>
         </details>
         <details>
-          <summary>Funktioniert er für Hund und Katze?<span class="arrow">+</span></summary>
-          <p>Ja. Der Tracker ist leicht und kompakt und passt an jedes gängige Halsband – für Hunde und Katzen gleichermaßen geeignet.</p>
+          <summary>{{ 'trakora.faq3_q' | t }}<span class="arrow">+</span></summary>
+          <p>{{ 'trakora.faq3_a' | t }}</p>
         </details>
         <details>
-          <summary>Brauche ich ein Abo?<span class="arrow">+</span></summary>
-          <p>Die App ist kostenlos. Für die Mobilfunk-Ortung wird eine kostengünstige SIM-Verbindung genutzt – alle Details erhältst du mit dem Gerät.</p>
+          <summary>{{ 'trakora.faq4_q' | t }}<span class="arrow">+</span></summary>
+          <p>{{ 'trakora.faq4_a' | t }}</p>
         </details>
         <details>
-          <summary>Was, wenn er mir nicht gefällt?<span class="arrow">+</span></summary>
-          <p>Kein Risiko: Du hast 30 Tage Zeit. Bist du nicht zufrieden, bekommst du den vollen Kaufpreis zurück – unkompliziert.</p>
+          <summary>{{ 'trakora.faq5_q' | t }}<span class="arrow">+</span></summary>
+          <p>{{ 'trakora.faq5_a' | t }}</p>
         </details>
       </div>
     </section>
@@ -212,9 +247,9 @@
   <!-- FINAL CTA -->
   <div class="tk-container">
     <section id="tk-buy" class="tk-final tk-reveal">
-      <h2>Schütze dein Haustier noch heute.</h2>
-      <p>Gib der Ungewissheit keine Chance. Mit TRAKORA weißt du immer, wo dein Liebling ist.</p>
-      {%- if product != blank -%}
+      <h2>{{ 'trakora.final_title' | t }}</h2>
+      <p>{{ 'trakora.final_text' | t }}</p>
+      {%- if variant -%}
         <div class="tk-price">
           <span class="now">{{ variant.price | money }}</span>
           {%- if variant.compare_at_price > variant.price -%}
@@ -222,13 +257,24 @@
           {%- endif -%}
         </div>
         <br>
-        <button type="submit" class="tk-cta" style="font-size:18px;padding:17px 46px;">In den Warenkorb</button>
+        <button type="submit" class="tk-cta" style="font-size:18px;padding:17px 46px;">{{ 'trakora.final_cta' | t }}</button>
       {%- else -%}
-        <a href="{{ routes.all_products_collection_url }}" class="tk-cta" style="font-size:18px;padding:17px 46px;">Jetzt sichern</a>
+        <a href="{{ routes.all_products_collection_url }}" class="tk-cta" style="font-size:18px;padding:17px 46px;">{{ 'trakora.final_cta_fallback' | t }}</a>
       {%- endif -%}
-      <div class="tk-cta-note">🛡️ 30 Tage Geld-zurück-Garantie · 🚚 Kostenloser Versand</div>
+      <div class="tk-cta-note">{{ 'trakora.guarantee_note' | t }}</div>
     </section>
   </div>
+
+  <!-- STICKY MOBILE BUY BAR -->
+  {%- if variant -%}
+    <div class="tk-sticky">
+      <div class="info">
+        <span class="p">{{ variant.price | money }}</span>
+        {%- if variant.compare_at_price > variant.price -%}<span class="o">{{ variant.compare_at_price | money }}</span>{%- endif -%}
+      </div>
+      <button type="submit" class="tk-cta">{{ 'trakora.final_cta' | t }}</button>
+    </div>
+  {%- endif -%}
 
   </form>
 
@@ -236,7 +282,9 @@
 
 <script>
   (function () {
-    var els = document.querySelectorAll('#shopify-section-{{ section.id }} .tk-reveal');
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.tk-reveal');
     if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('tk-in'); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('tk-in'); io.unobserve(en.target); } });
